@@ -316,8 +316,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             // Simulate network access.
             User user = new User();
-            user.userName = "gabriel.goncalves";
-            user.password = "gabriel00";
             Token token = restClient.getApi().Authenticate(user);
 
             for (String credential : DUMMY_CREDENTIALS) {
