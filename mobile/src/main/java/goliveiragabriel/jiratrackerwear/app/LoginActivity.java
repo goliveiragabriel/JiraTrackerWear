@@ -32,8 +32,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.model.QueryResult;
 import domain.model.Token;
 import domain.model.User;
+import domain.rest.ApiService;
 import domain.rest.RestClient;
 import goliveiragabriel.jiratrackerwear.R;
 
@@ -197,12 +199,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return true;
+        //return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+//        return password.length() > 4;
+        return true;
     }
 
     /**
@@ -303,7 +307,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
-        private RestClient restClient;
+        private RestClient restClient = new RestClient();
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -316,8 +320,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             // Simulate network access.
             User user = new User();
-            Token token = restClient.getApi().Authenticate(user);
-
+            user.userName = "gabriel.goncalves";
+            user.password = "gabriel00";
+            restClient.apiService = RestClient.createService(ApiService.class, user.userName, user.password);
+            QueryResult queryResult = restClient.getApi().GetIssues(user.userName + "+order+by+due+date", 5);
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
