@@ -9,7 +9,6 @@ import java.util.Date;
 /**
  * Created by gabriel.goncalves on 29/01/2016.
  */
-@Parcel
 public class LoginInfo {
 
     @SerializedName("failedLoginCount")

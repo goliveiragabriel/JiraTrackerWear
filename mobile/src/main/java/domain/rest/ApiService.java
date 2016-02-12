@@ -3,6 +3,7 @@ package domain.rest;
 import domain.model.QueryResult;
 import domain.model.Token;
 import domain.model.User;
+import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
@@ -25,6 +26,6 @@ public interface ApiService {
     User basicLogin();
 
     @GET("/rest/api/2/search?jql=")
-    QueryResult GetIssues(@Query("assignee") String userName, @Query("maxResults") int maxResults);
+    void GetIssues(@Query("assignee") String userName, @Query("maxResults") int maxResults, Callback<QueryResult> callback);
 
 }

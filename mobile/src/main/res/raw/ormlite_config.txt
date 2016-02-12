@@ -1,0 +1,181 @@
+#
+# generated on 2016/02/12 12:32:43
+#
+# --table-start--
+dataClass=domain.model.Field
+tableName=Field
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=summary
+columnName=summary
+# --field-end--
+# --field-start--
+fieldName=timetracking
+columnName=timeTracking
+dataPersister=DATE_STRING
+# --field-end--
+# --field-start--
+fieldName=issueType
+foreign=true
+foreignAutoRefresh=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=domain.model.Issues
+tableName=Issues
+# --table-fields-start--
+# --field-start--
+fieldName=code
+columnName=code
+generatedId=true
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=expand
+columnName=expand
+# --field-end--
+# --field-start--
+fieldName=id
+columnName=id
+# --field-end--
+# --field-start--
+fieldName=self
+columnName=self
+# --field-end--
+# --field-start--
+fieldName=key
+columnName=key
+# --field-end--
+# --field-start--
+fieldName=fields
+foreign=true
+foreignAutoRefresh=true
+# --field-end--
+# --field-start--
+fieldName=customfield_10071
+columnName=customfield_10071
+# --field-end--
+# --field-start--
+fieldName=transitions
+columnName=transitions
+# --field-end--
+# --field-start--
+fieldName=queryResult
+foreign=true
+foreignAutoRefresh=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=domain.model.IssueType
+tableName=IssueType
+# --table-fields-start--
+# --field-start--
+fieldName=code
+columnName=code
+generatedId=true
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=self
+columnName=self
+# --field-end--
+# --field-start--
+fieldName=id
+columnName=id
+# --field-end--
+# --field-start--
+fieldName=description
+columnName=description
+# --field-end--
+# --field-start--
+fieldName=iconUrl
+columnName=iconUrl
+# --field-end--
+# --field-start--
+fieldName=name
+columnName=name
+# --field-end--
+# --field-start--
+fieldName=substask
+columnName=subtask
+dataPersister=BOOLEAN
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=domain.model.QueryResult
+tableName=QueryResult
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=expand
+columnName=expand
+# --field-end--
+# --field-start--
+fieldName=startAt
+columnName=startAt
+# --field-end--
+# --field-start--
+fieldName=maxResults
+columnName=maxResults
+# --field-end--
+# --field-start--
+fieldName=total
+columnName=total
+# --field-end--
+# --field-start--
+fieldName=dbIssues
+columnName=issues
+foreignCollection=true
+foreignCollectionColumnName=issues
+# --field-end--
+# --field-start--
+fieldName=user
+foreign=true
+foreignAutoRefresh=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=domain.model.User
+tableName=User
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=userName
+columnName=userName
+# --field-end--
+# --field-start--
+fieldName=password
+columnName=password
+# --field-end--
+# --field-start--
+fieldName=lastAccess
+columnName=lastAccess
+dataPersister=DATE_STRING
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
