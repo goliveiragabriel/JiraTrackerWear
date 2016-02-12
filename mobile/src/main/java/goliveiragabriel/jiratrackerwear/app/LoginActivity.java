@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,9 +81,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private DbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if ( dbHelper == null ) {
+            dbHelper = OpenHelperManager.getHelper(this, DbHelper.class);
+        }
+        try {
+            List<User> lst = dbHelper.getUserDao().queryBuilder().orderBy("lastAccess", false).query();
+            if ( lst != null && lst.size() > 0) {
+                Cache.currentUser = lst.get(0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if(Cache.currentUser != null ) {
             Intent intent = new Intent(this, MyIssuesActivity.class);
             startActivity(intent);

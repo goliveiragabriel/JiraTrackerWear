@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -25,6 +26,7 @@ public class MyIssuesActivity extends AppCompatActivity {
     private DbHelper dbHelper;
     private IssuesRecycleAdapter mAdapter;
     RecyclerView listView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,10 @@ public class MyIssuesActivity extends AppCompatActivity {
         }
         //QueryResult queryResult = dbHelper.getQueryResultDao().queryBuilder().where().eq("user_id", Cache.currentUser.id).query().get(0);
         if(Cache.currentUser != null) {
+            listView.setHasFixedSize(true);
             List<Issues> lst = new ArrayList(Cache.currentUser.queryResult.issues);
+            mLayoutManager = new LinearLayoutManager(this);
+            listView.setLayoutManager(mLayoutManager);
             mAdapter = new IssuesRecycleAdapter(this, lst);
             listView.setAdapter(mAdapter);
         }
