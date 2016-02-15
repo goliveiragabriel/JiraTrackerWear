@@ -1,5 +1,6 @@
 package domain.rest;
 
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.google.gson.Gson;
@@ -8,8 +9,10 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+import domain.model.QueryResult;
 import domain.model.Token;
 import domain.model.User;
+import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -71,5 +74,23 @@ public class RestClient {
 
     public Token Authenticate(User user) {
         return getApi().Authenticate(user);
+    }
+
+    public void GetIssues(String userName, String orderBy, boolean ascending,  Callback<QueryResult> callback){
+        GetIssues(userName, 9999, orderBy, ascending, callback);
+    }
+    public void GetIssues(String userName, int maxResult,  Callback<QueryResult> callback){
+        GetIssues(userName, maxResult, "", true, callback);
+    }
+    public void GetIssues(String userName, String orderBy,  Callback<QueryResult> callback){
+        GetIssues(userName, 9999, orderBy, true, callback);
+    }
+    private void GetIssues(String userName, int maxResult, String orderBy, boolean ascending, Callback<QueryResult> callback){
+        if (orderBy != "") {
+            orderBy = ascending ? orderBy : "-" + orderBy;
+            this.apiService.GetIssues(userName, maxResult, orderBy, callback );
+            return;
+        }
+        this.apiService.GetIssues(userName, maxResult, callback );
     }
 }

@@ -357,7 +357,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             user.userName = mEmail;
             user.password = mPassword;
             restClient.apiService = RestClient.createService(ApiService.class, user.userName, user.password);
-            restClient.getApi().GetIssues(user.userName, 5, new Callback<QueryResult>() {
+            restClient.GetIssues(user.userName, "dueDate", false, new Callback<QueryResult>() {
                 @Override
                 public void success(QueryResult queryResult, Response response) {
                     user.lastAccess = Calendar.getInstance().getTime();

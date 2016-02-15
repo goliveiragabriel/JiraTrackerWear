@@ -28,4 +28,7 @@ public interface ApiService {
     @GET("/rest/api/2/search?jql=")
     void GetIssues(@Query("assignee") String userName, @Query("maxResults") int maxResults, Callback<QueryResult> callback);
 
+    @GET("/rest/api/2/search?jql=")
+    void GetIssues(@Query("assignee") String userName, @Query("maxResults") int maxResults, @Query("orderBy") String orderBy, Callback<QueryResult> callback);
+
 }
