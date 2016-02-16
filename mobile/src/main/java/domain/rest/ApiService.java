@@ -25,10 +25,10 @@ public interface ApiService {
     @POST("/rest/auth/1/session")
     User basicLogin();
 
-    @GET("/rest/api/2/search?jql=")
-    void GetIssues(@Query("assignee") String userName, @Query("maxResults") int maxResults, Callback<QueryResult> callback);
+    @GET("/rest/api/2/search")
+    void GetIssues(@Query("jql") String query, @Query("maxResults") int maxResults, Callback<QueryResult> callback);
 
-    @GET("/rest/api/2/search?jql=")
-    void GetIssues(@Query("assignee") String userName, @Query("maxResults") int maxResults, @Query("orderBy") String orderBy, Callback<QueryResult> callback);
+    @GET("/rest/api/2/search")
+    void GetIssues(@Query("jql") String query, @Query("maxResults") int maxResults, @Query("orderBy") String orderBy, Callback<QueryResult> callback);
 
 }

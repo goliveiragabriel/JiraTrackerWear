@@ -45,6 +45,7 @@ import domain.model.QueryResult;
 import domain.model.Token;
 import domain.model.User;
 import domain.rest.ApiService;
+import domain.rest.IssuesCallback;
 import domain.rest.RestClient;
 import goliveiragabriel.jiratrackerwear.R;
 import goliveiragabriel.jiratrackerwear.app.helper.Cache;
@@ -82,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private DbHelper dbHelper;
+    private RestClient restClient = new RestClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +99,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             e.printStackTrace();
         }
         if(Cache.currentUser != null ) {
-            Intent intent = new Intent(this, MyIssuesActivity.class);
-            startActivity(intent);
+            restClient.apiService = RestClient.createService(ApiService.class, Cache.currentUser.userName, Cache.currentUser.password);
+            IssuesCallback issuesCallback = new IssuesCallback(this, dbHelper, Cache.currentUser);
+            restClient.GetIssues(Cache.currentUser.userName, 50, "updated", false, issuesCallback);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -357,33 +360,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             user.userName = mEmail;
             user.password = mPassword;
             restClient.apiService = RestClient.createService(ApiService.class, user.userName, user.password);
-            restClient.GetIssues(user.userName, "dueDate", false, new Callback<QueryResult>() {
-                @Override
-                public void success(QueryResult queryResult, Response response) {
-                    user.lastAccess = Calendar.getInstance().getTime();
-                    if ( Cache.currentUser != null) {
-                        Intent intent = new Intent(mContext, MyIssuesActivity.class );
-                        startActivity(intent);
-                    }
-                    queryResult.user = user;
-                    dbHelper.getUserDao().createOrUpdate(user);
-                    queryResult.dbIssues = new ArrayList<Issues>(queryResult.issues);
-                    user.queryResult = queryResult;
-                    //dbHelper.getQueryResultDao().create(queryResult);
-                    Cache.currentUser = user;
-                    if ( dbHelper != null ) {
-                        OpenHelperManager.releaseHelper();
-                        dbHelper = null;
-                    }
-                    Intent intent = new Intent(mContext, MyIssuesActivity.class );
-                    startActivity(intent);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
+            IssuesCallback issuesCallback = new IssuesCallback(mContext, dbHelper, user);
+            restClient.GetIssues(user.userName, 50, "updated", false, issuesCallback);
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {

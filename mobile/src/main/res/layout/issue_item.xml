@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:clickable="true"
@@ -9,16 +9,41 @@
     android:descendantFocusability="blocksDescendants"
     android:divider="@drawable/abc_btn_borderless_material"
     android:dividerPadding="1dp"
-    android:weightSum="4"
+    android:weightSum="12"
+    android:background="@drawable/border"
+    android:padding="@dimen/abc_action_bar_overflow_padding_end_material"
     android:id="@+id/issueRL">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/infoRL">
+        android:id="@+id/statusRL"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_weight="5"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ZEUS-181"
+            android:id="@+id/txtKey"
+            style="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle"
+            android:textColor="@color/accent_material_dark" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/infoRL"
+        style="@style/Base.Widget.AppCompat.TextView.SpinnerItem"
+        android:layout_toEndOf="@id/statusRL"
+        android:layout_weight="7"
+        android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/firstRow"
             android:layout_alignParentStart="true">
@@ -30,11 +55,29 @@
                 android:text="Teste"
                 android:id="@+id/summary"
                 android:paddingStart="@dimen/abc_action_bar_subtitle_bottom_margin_material"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                style="@android:style/TextAppearance.DeviceDefault.Small" />
 
         </RelativeLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/actionRL"
+        android:layout_toEndOf="@id/infoRL"
+        android:layout_weight="1"
+        android:baselineAligned="true"
+        android:layout_gravity="right"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sendImage"
+            android:background="@android:drawable/ic_menu_send" />
+    </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

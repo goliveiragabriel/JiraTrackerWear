@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.concurrent.TimeUnit;
 
 import domain.model.QueryResult;
@@ -85,12 +87,18 @@ public class RestClient {
     public void GetIssues(String userName, String orderBy,  Callback<QueryResult> callback){
         GetIssues(userName, 9999, orderBy, true, callback);
     }
-    private void GetIssues(String userName, int maxResult, String orderBy, boolean ascending, Callback<QueryResult> callback){
-        if (orderBy != "") {
-            orderBy = ascending ? orderBy : "-" + orderBy;
-            this.apiService.GetIssues(userName, maxResult, orderBy, callback );
-            return;
-        }
-        this.apiService.GetIssues(userName, maxResult, callback );
+    public void GetIssues(String userName, int maxResult, String orderBy, boolean ascending, Callback<QueryResult> callback){
+        String query = "";
+//        try {
+            query = "assignee="+ userName;
+            if (orderBy != "") {
+            query += " order by " + orderBy;
+                query += " " + (ascending ? "asc" : "desc");
+            }
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+        this.apiService.GetIssues(query, maxResult, callback );
     }
+
 }
