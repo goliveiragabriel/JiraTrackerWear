@@ -59,14 +59,20 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
 
 
                 Intent viewIntent = new Intent(mContext, MyIssuesActivity.class);
-                PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, viewIntent, 0);
+                PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                // Create the action
+                NotificationCompat.Action action =
+                        new NotificationCompat.Action.Builder(android.R.drawable.ic_popup_reminder,
+                                mContext.getString(R.string.label), viewPendingIntent)
+                                .build();
+
                 // Create builder for the main notification
                 NotificationCompat.Builder notificationBuilder =
                         new NotificationCompat.Builder(mContext)
                                 .setSmallIcon(R.mipmap.ic_launcher)
                                 .setContentTitle(issue.key)
                                 .setContentText(issue.fields.summary)
-                                .setContentIntent(viewPendingIntent);
+                                .extend(new WearableExtender().addAction(action));
                 // Build the notification and issues it with notification manager.
                 // Get an instance of the NotificationManager service
                 NotificationManagerCompat notificationManager =

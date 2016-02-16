@@ -13,6 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="label">Iniciar atividade</string>
     <string name="title_activity_my_issues">My issues</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

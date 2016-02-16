@@ -56,7 +56,7 @@ public class MyIssuesActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 // Verifica se foi adicionado nova issue
                 if(indexOf > 0 && indexOf > oldIssues.size() - 1){
-                    mAdapter.notifyChanges(mAdapter.mIssues.subList(oldIssues.size(), mAdapter.mIssues.size()-1));
+                    mAdapter.notifyChanges(mAdapter.mIssues.subList(indexOf, mAdapter.mIssues.size()-1));
                 }
 
             }

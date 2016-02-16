@@ -12,7 +12,8 @@
         android:theme="@android:style/Theme.DeviceDefault">
         <activity
             android:name=".MyStubBroadcastActivity"
-            android:label="MyStubBroadcastActivity">
+            android:label="Jira Tracker Wear"
+            android:icon="@mipmap/ic_launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,9 +23,13 @@
         <activity
             android:name=".MyIssuesActivity"
             android:allowEmbedded="true"
+            android:label="Jira Tracker Wear"
+            android:icon="@mipmap/ic_launcher"
             android:exported="true"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.DeviceDefault.Light"></activity>
+            android:theme="@android:style/Theme.DeviceDefault.Light">
+
+        </activity>
 
         <receiver
             android:name=".MyPostNotificationReceiver"
