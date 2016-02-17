@@ -1,6 +1,7 @@
 package goliveiragabriel.jiratrackerwear.app;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,9 +14,12 @@ import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -114,6 +118,8 @@ public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClie
 
     @Override
     public void onConnected(Bundle bundle) {
+        List<Issues> issues = Cache.currentUser.queryResult.issues;
+        new DataTask (this, issues).execute();
     }
 
     @Override
@@ -126,4 +132,33 @@ public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClie
 
     }
 
+    private class DataTask extends AsyncTask<Node, Void, Void> {
+
+        Context mContext;
+        List<Issues> mIssues;
+
+        public DataTask(Context context, List<Issues> issues) {
+            this.mContext = context;
+            this.mIssues = issues;
+        }
+
+        @Override
+        protected Void doInBackground(Node... params) {
+
+            PutDataMapRequest dataMap = PutDataMapRequest.create ("/myapp/myissues");
+            String[] contents = new String[mIssues.size()];
+            int i =0;
+            for(Issues issue : mIssues) {
+                contents[i] = issue.key;
+                i++;
+            }
+            dataMap.getDataMap().putStringArray("contents", contents);
+            PutDataRequest request = dataMap.asPutDataRequest();
+
+            DataApi.DataItemResult dataItemResult = Wearable.DataApi
+                    .putDataItem(mGoogleApiClient, request).await();
+
+            return null;
+        }
+    }
 }
