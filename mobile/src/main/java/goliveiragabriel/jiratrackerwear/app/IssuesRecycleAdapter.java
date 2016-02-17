@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,12 @@ import domain.model.Issues;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
+
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
+
 import goliveiragabriel.jiratrackerwear.R;
 
 
@@ -62,7 +69,7 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
                 PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 // Create the action
                 NotificationCompat.Action action =
-                        new NotificationCompat.Action.Builder(android.R.drawable.ic_popup_reminder,
+                        new NotificationCompat.Action.Builder(android.R.drawable.ic_popup_sync,
                                 mContext.getString(R.string.label), viewPendingIntent)
                                 .build();
 
@@ -77,7 +84,7 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
                 // Get an instance of the NotificationManager service
                 NotificationManagerCompat notificationManager =
                         NotificationManagerCompat.from(mContext);
-
+                new SendToDataLayerThread(MyIssuesActivity.ISSUES_KEY, issue.key).start();
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
             }
@@ -144,5 +151,31 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
         public void onClick(View v) {
 
         }
+
     }
+    private class SendToDataLayerThread extends Thread {
+        String path;
+        String message;
+
+        public SendToDataLayerThread(String p, String msg) {
+            message = msg;
+            path = p;
+        }
+
+        @Override
+        public void run() {
+            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(MyIssuesActivity.mGoogleApiClient).await();
+            for (Node node : nodes.getNodes()) {
+                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(MyIssuesActivity.mGoogleApiClient, node.getId(), path, message.getBytes()).await();
+                if (result.getStatus().isSuccess()) {
+                    Log.v("myTag", "Message: {" + message + "} sent to: " + node.getDisplayName());
+                } else {
+                    // Log an error
+                    Log.v("myTag", "ERROR: failed to send Message");
+                }
+
+            }
+        }
+    }
+
 }

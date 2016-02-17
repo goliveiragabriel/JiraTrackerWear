@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:clickable="true"
@@ -11,42 +11,42 @@
     android:dividerPadding="1dp"
     android:weightSum="12"
     android:background="@drawable/border"
-    android:padding="@dimen/abc_action_bar_overflow_padding_end_material"
+    android:padding="@dimen/abc_action_bar_icon_vertical_padding_material"
     android:id="@+id/issueRL">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/statusRL"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_weight="5"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="ZEUS-181"
-            android:id="@+id/txtKey"
-            style="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle"
-            android:textColor="@color/accent_material_dark" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:id="@+id/infoRL"
         style="@style/Base.Widget.AppCompat.TextView.SpinnerItem"
-        android:layout_toEndOf="@id/statusRL"
-        android:layout_weight="7"
-        android:orientation="horizontal">
+        android:layout_weight="11"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/statusRL"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="ZEUS-181"
+                android:id="@+id/txtKey"
+                android:paddingStart="@dimen/abc_action_bar_subtitle_bottom_margin_material"
+                style="@android:style/TextAppearance.DeviceDefault.Small"
+                android:textColor="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/firstRow"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,12 +58,12 @@
                 android:ellipsize="end"
                 style="@android:style/TextAppearance.DeviceDefault.Small" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/abc_text_size_display_1_material"
         android:layout_height="wrap_content"
         android:id="@+id/actionRL"
         android:layout_toEndOf="@id/infoRL"

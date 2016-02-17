@@ -10,12 +10,21 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        incremental = true;
+        preDexLibraries = false
+        javaMaxHeapSize "2g"
     }
 }
 
@@ -33,4 +42,5 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.android.support:recyclerview-v7:23.0.+'
+    compile 'com.google.android.gms:play-services:6.5.+'
 }

@@ -1,88 +1,53 @@
 package goliveiragabriel.jiratrackerwear;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.DataEvent;
-import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataItem;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.DataMapItem;
-import com.google.android.gms.wearable.Wearable;
 
-
-public class MyIssuesActivity extends Activity implements DataApi.DataListener,
-                                                          GoogleApiClient.ConnectionCallbacks,
-                                                          GoogleApiClient.OnConnectionFailedListener{
+public class MyIssuesActivity extends Activity {
 
     private TextView mTextView;
-    private static final String ISSUES_KEY = "com.example.key.count";
-    private GoogleApiClient mGoogleApiClient;
-    private int count = 0;
+    private ImageButton mTrackButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myissues);
         mTextView = (TextView) findViewById(R.id.text);
+        mTrackButton = (ImageButton) findViewById(R.id.startTrack);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                                .addApi(Wearable.API)
-                                .addConnectionCallbacks(this)
-                                .addOnConnectionFailedListener(this)
-                                .build();
-    }
+        final Context context = this;
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Wearable.DataApi.addListener(mGoogleApiClient,this);
-        mGoogleApiClient.disconnect();
-    }
+        // Register the local broadcast receiver, defined in step 3.
+        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        MessageReceiver messageReceiver = new MessageReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onDataChanged(DataEventBuffer dataEventBuffer) {
-            for (DataEvent event : dataEventBuffer){
-                if (event.getType() == DataEvent.TYPE_CHANGED) {
-                    // DataItem changed
-                    DataItem item = event.getDataItem();
-                    if (item.getUri().getPath().compareTo("/count") == 0) {
-                        DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-                        updateCount(dataMap.getInt(ISSUES_KEY));
-                    }
-                } else if (event.getType() == DataEvent.TYPE_DELETED) {
-                    // DataItem deleted
-                }
+        mTrackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TrackingActivity.class);
+                startActivity(intent);
             }
+        });
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mGoogleApiClient.disconnect();
-    }
-    private void updateCount(int c) {
-
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            // Display message in UI
+            mTextView.setText(message);
+        }
     }
 }

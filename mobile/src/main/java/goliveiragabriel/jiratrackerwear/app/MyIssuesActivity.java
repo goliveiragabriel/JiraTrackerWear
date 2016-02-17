@@ -8,8 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
@@ -26,13 +33,15 @@ import domain.rest.RestClient;
 import goliveiragabriel.jiratrackerwear.R;
 import goliveiragabriel.jiratrackerwear.app.helper.Cache;
 
-public class MyIssuesActivity extends AppCompatActivity {
+public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private DbHelper dbHelper;
     private IssuesRecycleAdapter mAdapter;
     RecyclerView listView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RestClient restClient = new RestClient();
+    public static GoogleApiClient mGoogleApiClient;
+    public static String ISSUES_KEY = "/issue";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +84,23 @@ public class MyIssuesActivity extends AppCompatActivity {
             listView.setAdapter(mAdapter);
             listView.setNestedScrollingEnabled(false);
         }
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -85,4 +111,19 @@ public class MyIssuesActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
 }
