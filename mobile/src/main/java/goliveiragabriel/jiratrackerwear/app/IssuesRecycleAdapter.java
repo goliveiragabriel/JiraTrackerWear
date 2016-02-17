@@ -69,7 +69,7 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
                 PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 // Create the action
                 NotificationCompat.Action action =
-                        new NotificationCompat.Action.Builder(android.R.drawable.ic_popup_sync,
+                        new NotificationCompat.Action.Builder(R.drawable.ic_cloud_download_blue_500_48dp,
                                 mContext.getString(R.string.label), viewPendingIntent)
                                 .build();
 
