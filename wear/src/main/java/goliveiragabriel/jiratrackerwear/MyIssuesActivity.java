@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.activity.WearableActivity;
+import android.support.wearable.view.GridViewPager;
+import android.support.wearable.view.WearableListView;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -23,39 +27,35 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
 
-public class MyIssuesActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-                                                            DataApi.DataListener{
+public class MyIssuesActivity extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+                                                            DataApi.DataListener, WearableListView.ClickListener{
 
     private TextView mTextView;
     private ImageButton mTrackButton;
     private GoogleApiClient mGoogleApiClient;
+    private WearableListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myissues);
-        mTextView = (TextView) findViewById(R.id.text);
-        mTrackButton = (ImageButton) findViewById(R.id.startTrack);
-
-        final Context context = this;
+        //mTextView = (TextView) findViewById(R.id.text);
 
         // Register the local broadcast receiver, defined in step 3.
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         MessageReceiver messageReceiver = new MessageReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
-        mTrackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, TrackingActivity.class);
-                startActivity(intent);
-            }
-        });
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        // Get the list component from the layout of the activity
+        listView =
+                (WearableListView) findViewById(R.id.wearable_list);
+
     }
 
     @Override
@@ -76,18 +76,28 @@ public class MyIssuesActivity extends Activity implements GoogleApiClient.Connec
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         for (DataEvent event: dataEvents) {
-
-
             String eventUri = event.getDataItem().getUri().toString();
-
             if (eventUri.contains ("/myapp/myissues")) {
-
                 DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
                 String[] data = dataItem.getDataMap().getStringArray("contents");
-
+                // Assign an adapter to the list
+                listView.setAdapter(new ListAdapter(this, data));
                 //myListener.onDataReceived(data);
             }
         }
+    }
+
+    @Override
+    public void onClick(WearableListView.ViewHolder viewHolder) {
+        Integer tag = (Integer) viewHolder.itemView.getTag();
+        Intent intent = new Intent(this, ConfirmTrackActivity.class);
+        intent.putExtra("issue", tag);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onTopEmptyRegionClick() {
+
     }
 
     private class MessageReceiver extends BroadcastReceiver {
@@ -95,7 +105,7 @@ public class MyIssuesActivity extends Activity implements GoogleApiClient.Connec
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             // Display message in UI
-            mTextView.setText(message);
+            //mTextView.setText(message);
         }
     }
 }

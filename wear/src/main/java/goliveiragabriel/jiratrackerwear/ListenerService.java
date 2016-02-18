@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -27,4 +30,17 @@ public class ListenerService extends WearableListenerService {
         }
     }
 
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        for (DataEvent event: dataEvents) {
+            String eventUri = event.getDataItem().getUri().toString();
+            if (eventUri.contains ("/myapp/myissues")) {
+                DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
+                String[] data = dataItem.getDataMap().getStringArray("contents");
+                // Assign an adapter to the list
+                //listView.setAdapter(new ListAdapter(this, data));
+                //myListener.onDataReceived(data);
+            }
+        }
+    }
 }

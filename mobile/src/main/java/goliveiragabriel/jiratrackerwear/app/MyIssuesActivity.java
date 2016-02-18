@@ -15,6 +15,7 @@ import android.view.View;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -26,6 +27,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import domain.helper.DbHelper;
@@ -44,7 +46,7 @@ public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClie
     RecyclerView listView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RestClient restClient = new RestClient();
-    public static GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
     public static String ISSUES_KEY = "/issue";
 
     @Override
@@ -119,7 +121,7 @@ public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     public void onConnected(Bundle bundle) {
         List<Issues> issues = Cache.currentUser.queryResult.issues;
-        new DataTask (this, issues).execute();
+        new SendToDataLayerThread("/myapp/myissues", issues).start();
     }
 
     @Override
@@ -131,6 +133,39 @@ public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClie
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+    private class SendToDataLayerThread extends Thread {
+        String path;
+        List<Issues> message;
+
+        public SendToDataLayerThread(String p, List<Issues> msg) {
+            message = msg;
+            path = p;
+        }
+
+        @Override
+        public void run() {
+            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+            PutDataMapRequest dataMap = PutDataMapRequest.create(path);
+            String[] contents = new String[message.size()];
+            int i =0;
+            for(Issues issue : message) {
+                contents[i] = issue.key;
+                i++;
+            }
+            dataMap.getDataMap().putStringArray("contents", contents);
+            for(Node node : nodes.getNodes()) {
+                if(mGoogleApiClient.isConnected()){
+
+                    dataMap.getDataMap().putLong("new_TimeStamp", new Date().getTime());
+                    dataMap.getDataMap().putStringArray("contents", contents);
+
+                    PutDataRequest request = dataMap.asPutDataRequest();
+                    Wearable.DataApi.putDataItem(mGoogleApiClient,request);
+                }
+            }
+        }
+    }
+
 
     private class DataTask extends AsyncTask<Node, Void, Void> {
 
@@ -153,6 +188,7 @@ public class MyIssuesActivity extends AppCompatActivity implements GoogleApiClie
                 i++;
             }
             dataMap.getDataMap().putStringArray("contents", contents);
+            dataMap.getDataMap().putLong("time", new Date().getTime());
             PutDataRequest request = dataMap.asPutDataRequest();
 
             DataApi.DataItemResult dataItemResult = Wearable.DataApi

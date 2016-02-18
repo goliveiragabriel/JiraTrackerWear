@@ -3,8 +3,8 @@
     package="goliveiragabriel.jiratrackerwear">
 
     <uses-feature android:name="android.hardware.type.watch" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -12,20 +12,31 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
-
-        <uses-library android:name="com.google.android.wearable" android:required="false" />
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
 
         <activity
             android:name=".MyStubBroadcastActivity"
             android:icon="@mipmap/ic_launcher"
-            android:label="Jira Tracker Wear"></activity>
+            android:label="Jira Tracker Wear" />
+        <activity
+            android:name=".TrackingActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Jira Tracker Wear"/>
+        <activity
+            android:name=".ConfirmTrackActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/title_activity_confirm_track">
+
+        </activity>
         <activity
             android:name=".MyIssuesActivity"
             android:allowEmbedded="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="Jira Tracker Wear"
-            android:taskAffinity=""
+            android:taskAffinity=".ConfirmTrackActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +59,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".TrackingActivity"></activity>
+
     </application>
 
 </manifest>

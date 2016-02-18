@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
 
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -84,7 +85,6 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
                 // Get an instance of the NotificationManager service
                 NotificationManagerCompat notificationManager =
                         NotificationManagerCompat.from(mContext);
-                new SendToDataLayerThread(MyIssuesActivity.ISSUES_KEY, issue.key).start();
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
             }
@@ -152,30 +152,6 @@ public class IssuesRecycleAdapter extends RecyclerView.Adapter<IssuesRecycleAdap
 
         }
 
-    }
-    private class SendToDataLayerThread extends Thread {
-        String path;
-        String message;
-
-        public SendToDataLayerThread(String p, String msg) {
-            message = msg;
-            path = p;
-        }
-
-        @Override
-        public void run() {
-            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(MyIssuesActivity.mGoogleApiClient).await();
-            for (Node node : nodes.getNodes()) {
-                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(MyIssuesActivity.mGoogleApiClient, node.getId(), path, message.getBytes()).await();
-                if (result.getStatus().isSuccess()) {
-                    Log.v("myTag", "Message: {" + message + "} sent to: " + node.getDisplayName());
-                } else {
-                    // Log an error
-                    Log.v("myTag", "ERROR: failed to send Message");
-                }
-
-            }
-        }
     }
 
 }
