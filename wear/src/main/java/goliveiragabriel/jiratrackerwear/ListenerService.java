@@ -38,7 +38,12 @@ public class ListenerService extends WearableListenerService {
                 DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
                 String[] data = dataItem.getDataMap().getStringArray("contents");
                 // Assign an adapter to the list
-                //listView.setAdapter(new ListAdapter(this, data));
+                MyIssuesActivity.data = data;
+                if(MyIssuesActivity.listView != null) {
+                    ListAdapter adapter = (ListAdapter) MyIssuesActivity.listView.getAdapter();
+                    adapter.setData(data);
+
+                }
                 //myListener.onDataReceived(data);
             }
         }

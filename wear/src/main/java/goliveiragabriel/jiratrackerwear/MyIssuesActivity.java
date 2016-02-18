@@ -33,7 +33,9 @@ public class MyIssuesActivity extends WearableActivity implements GoogleApiClien
     private TextView mTextView;
     private ImageButton mTrackButton;
     private GoogleApiClient mGoogleApiClient;
-    private WearableListView listView;
+    public static WearableListView listView;
+    public static String[] data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class MyIssuesActivity extends WearableActivity implements GoogleApiClien
         // Get the list component from the layout of the activity
         listView =
                 (WearableListView) findViewById(R.id.wearable_list);
+        listView.setAdapter(new ListAdapter(this, data));
+
 
     }
 
@@ -79,9 +83,8 @@ public class MyIssuesActivity extends WearableActivity implements GoogleApiClien
             String eventUri = event.getDataItem().getUri().toString();
             if (eventUri.contains ("/myapp/myissues")) {
                 DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
-                String[] data = dataItem.getDataMap().getStringArray("contents");
+                data = dataItem.getDataMap().getStringArray("contents");
                 // Assign an adapter to the list
-                listView.setAdapter(new ListAdapter(this, data));
                 //myListener.onDataReceived(data);
             }
         }

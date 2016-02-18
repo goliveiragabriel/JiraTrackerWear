@@ -32,13 +32,19 @@ public class ListAdapter extends WearableListView.Adapter {
         }
     }
 
+    public void setData(String[] data) {
+        this.mDataset = data;
+    }
+
     // Create new views for list items
     // (invoked by the WearableListView's layout manager)
     @Override
     public WearableListView.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                           int viewType) {
         // Inflate our custom layout for list items
-        return new ItemViewHolder(mInflater.inflate(R.layout.list_item, null));
+        View vi = mInflater.inflate(R.layout.list_item, null);
+        ItemViewHolder holder = new ItemViewHolder(vi);
+        return holder;
     }
 
     // Replace the contents of a list item
@@ -60,6 +66,7 @@ public class ListAdapter extends WearableListView.Adapter {
     // (invoked by the WearableListView's layout manager)
     @Override
     public int getItemCount() {
+        if(mDataset == null) return 0;
         return mDataset.length;
     }
 }
